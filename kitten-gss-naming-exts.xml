@@ -309,11 +309,9 @@
       <t>If the primary component contains an ASCII : (0x3a), then the primary
       component is a URI. Otherwise, the attribute is a local attribute and
       the primary component has meaning to the implementation of GSS-API or to
-      the specific configuration of the application. At this time, local
-      attribute names are not standardized; there is debate about whether such
-      standardization will be useful. Any future standardizations will need to
-      balance potential problems resulting from attribute names used before
-      standardization.</t>
+      the specific configuration of the application. Local attribute
+      names with an at-sign ('@') in them are reserved for future allocation by
+      the IETF.</t>
 
       <t>Since attribute names are split at the first space into prefix
       and suffix, there is a potential for ambiguity if a mechanism
