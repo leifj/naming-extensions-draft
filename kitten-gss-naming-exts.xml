@@ -10,6 +10,18 @@
 <?rfc sortrefs="yes"?>
 <?rfc iprnotified="no" ?>
 <?rfc strict="yes" ?>
+
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+    <!ENTITY rfc2119 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml'>
+    <!ENTITY rfc2743 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2743.xml'>
+    <!ENTITY rfc2744 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2744.xml'>
+    <!ENTITY rfc5587 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5587.xml'>
+    <!ENTITY rfc4768 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.4768.xml'>
+    <!ENTITY saml-core PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml2/reference.OASIS.saml-core-2.0-os.xml'>
+    <!ENTITY gssapi-naming-exts PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-kitten-gssapi-naming-exts'>
+]>
+
+
 <rfc category="std" docName="draft-ietf-kitten-gssapi-naming-exts-14"
      ipr="pre5378Trust200902">
   <front>
@@ -289,9 +301,10 @@
 
       <t>If an attribute name contains a space (ASCII 0x20), the first space
       separates the most significant or primary component of the name from the
-      remainder. If there is no space, the primary component is the entire
-      name, otherwise it defines the interpretation of the remainder of the
-      name.s</t>
+      remainder. We may refer to the primary component of the attribute
+      name as the attribute name's "prefix". If there is no space, the
+      primary component is the entire name, otherwise it defines the
+      interpretation of the remainder of the name.s</t>
 
       <t>If the primary component contains an ASCII : (0x3a), then the primary
       component is a URI. Otherwise, the attribute is a local attribute and
@@ -302,13 +315,12 @@
       balance potential problems resulting from attribute names used before
       standardization.</t>
 
-      <t>A sufficient prefix of attribute names needs to be dictated by a
-      mechanism in order to describe the context. For example it would be
-      problematic to represent SAML attribute names as the name format URI, a
-      space, and the remainder of the name. A carefully crafted SAML assertion
-      could appear to be a name from another mechanism or context. Typically a
-      SAML attribute name would include a prefix describing the trust model
-      and other context of the attribute name.</t>
+      <t>Since attribute names are split at the first space into prefix
+      and suffix, there is a potential for ambiguity if a mechanism
+      blindly passes through a name attribute whose name it does not
+      understand.  In order to prevent such ambiguities the mechanism
+      MUST always prefix raw name attributes with a prefix that reflects
+      the context of the attribute.</t>
 
       <t>Local attribute names under the control of an administrator or a
       sufficiently trusted part of the platform need not have a prefix to
@@ -759,13 +771,10 @@ OM_uint32 gss_export_name_composite(
 
   <back>
     <references title="Normative References">
-      <?rfc include='reference.RFC.2119.xml'?>
-
-      <?rfc include='reference.RFC.2743.xml'?>
-
-      <?rfc include='reference.RFC.2744.xml'?>
-
-      <?rfc include='reference.RFC.5587.xml'?>
+      &rfc2119;
+      &rfc2743;
+      &rfc2744;
+      &rfc5587;
 
       <reference anchor="GFD.024">
         <front>
@@ -864,9 +873,9 @@ OM_uint32 gss_export_name_composite(
     </references>
 
     <references title="Informative References">
-      <?rfc include='reference.RFC.4768.xml'?>
+      &rfc4768;
 
-      <?rfc include="reference.OASIS.saml-core-2.0-os"?>
+      &saml-core;
     </references>
   </back>
 </rfc>
