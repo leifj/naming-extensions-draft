@@ -10,7 +10,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc iprnotified="no" ?>
 <?rfc strict="yes" ?>
-<rfc category="std" docName="draft-ietf-kitten-gssapi-naming-exts-11"
+<rfc category="std" docName="draft-ietf-kitten-gssapi-naming-exts-13"
      ipr="pre5378Trust200902">
   <front>
     <title abbrev="GSS-API Naming Extensions">GSS-API Naming
@@ -32,7 +32,7 @@
           <country>US</country>
         </postal>
 
-        <email>Nicolas.Williams@sun.com</email>
+        <email>nico@cryptonector.com</email>
       </address>
     </author>
 
@@ -80,7 +80,27 @@
       </address>
     </author>
 
-    <date day="22" month="May" year="2011" />
+    <author fullname="Simon Josefsson" initials="S. " surname="Josefsson">
+      <organization>SJD AB</organization>
+
+      <address>
+        <postal>
+          <street>Hagagatan 24</street>
+
+          <city>Stockholm</city>
+
+          <code>113 47</code>
+
+          <country>SE</country>
+        </postal>
+
+        <email>simon@josefsson.org</email>
+
+        <uri>http://josefsson.org/</uri>
+      </address>
+    </author>
+
+    <date day="17" month="December" year="2011" />
 
     <area>Security</area>
 
@@ -130,6 +150,15 @@
       network representations of name attributes, so a function is provided to
       obtain objects of such types associated with names and name
       attributes.</t>
+
+      <t>Future updates of this specification may involve adding an attribute
+      namespace for attributes that only have application-specific semantics.
+      Note that mechanisms will still need to know how to transport such
+      attributes. The IETF may also wish to add functions by which to inquire
+      whether a mechanism(s) understands a given attribute name or namespace,
+      and to list which attributes or attribute namespaces a mechanism
+      understands. Finally, the IETF may want to consider adding a function by
+      which to determine the name of the issuer of a name attribute.</t>
     </section>
 
     <section title="Name Attribute Authenticity">
@@ -302,13 +331,28 @@
       <section title="SET OF OCTET STRING">
         <t>The construct SET OF OCTET STRING occurs once in <xref
         target="RFC2743">RFC 2743</xref> where it is used to represent a set
-        of status strings in the GSS_Display_status call. That specification
-        does not mention directly how the type is represented. The global grid
-        forum has defined SET OF OCTET STRING as a buffer-set type in <xref
-        target="GFD.024">GFD.024</xref> which also provides an API for memory
-        management of these structures. Implementations of this specification
-        must implement the SET OF OCTET STRING type and associated memory
-        management from <xref target="GFD.024">GFD.024</xref>.</t>
+        of status strings in the GSS_Display_status call. The Global Grid
+        Forum has defined SET OF OCTET STRING as a buffer-set type in <xref
+        target="GFD.024">GFD.024</xref> which also provides one API for memory
+        management of these structures. The normative reference to <xref
+        target="GFD.024">GFD.024</xref> is for the buffer set functions
+        defined in section 2.5 and the associated buffer set C types defined
+        in section 6 (namely gss_buffer_set_desc, gss_buffer_set_t,
+        gss_create_empty_buffer_set, gss_add_buffer_set_member,
+        gss_release_buffer_set). Nothing else from GFD.024 is required to
+        implement this document. In particular, that document specify changes
+        in behaviour existing GSS-API functions in section 3: implementing
+        those changes are not required to implement this document. Any
+        implementation of SET OF OCTET STRING for use by this specification
+        MUST preserve order.</t>
+      </section>
+
+      <section title="Const types">
+        <t>The C bindings for the new APIs uses some types from <xref
+        target="RFC5587"></xref> to avoid issues with the use of "const". The
+        normative reference to <xref target="RFC5587"></xref> is for the C
+        types specified in Figure 1 of 3.4.6, nothing else from that document
+        is required to implement this document.</t>
       </section>
 
       <section title="GSS_Display_name_ext()">
@@ -337,18 +381,21 @@
           </list></t>
 
         <t>This function displays a given name using the given name syntax, if
-        possible. This operation may require mapping MNs to generic name
-        syntaxes or generic name syntaxes to mechanism-specific name syntaxes;
-        such mappings may not always be feasible and MAY be inexact or lossy,
-        therefore this function may fail.</t>
+        possible. This operation may require mapping Mechanism Names (MNs) to
+        generic name syntaxes or generic name syntaxes to mechanism-specific
+        name syntaxes; such mappings may not always be feasible and MAY be
+        inexact or lossy, therefore this function may fail.</t>
 
         <section title="C-Bindings">
+          <t>The display_name buffer is de-allocated by the caller with
+          gss_release_buffer.</t>
+
           <figure>
             <artwork><![CDATA[
 OM_uint32 gss_display_name_ext(
   OM_uint32                     *minor_status,
-  gss_name_t                    name,
-  gss_OID                       display_as_name_type,
+  gss_const_name_t              name,
+  gss_const_OID                 display_as_name_type,
   gss_buffer_t                  display_name
 );
 		    			]]></artwork>
@@ -371,8 +418,7 @@ OM_uint32 gss_display_name_ext(
             <t>mn_mech OBJECT IDENTIFIER,</t>
 
             <t>attrs SET OF OCTET STRING -- the caller is responsible for
-            de-allocating memory using GSS_Release_buffer_set defined in <xref
-            target="GFD.024">GFD.024</xref></t>
+            de-allocating memory using GSS_Release_buffer_set</t>
           </list></t>
 
         <t>Return major_status codes: <list style="symbols">
@@ -382,15 +428,15 @@ OM_uint32 gss_display_name_ext(
           </list></t>
 
         <t>This function outputs the set of attributes of a name. It also
-        indicates if a given name is an MN or not and, if it is, what
-        mechanism it's an MN of.</t>
+        indicates if a given name is an Mechanism Name (MN) or not and, if it
+        is, what mechanism it's an MN of.</t>
 
         <section title="C-Bindings">
           <figure>
             <artwork><![CDATA[
 OM_uint32 gss_inquire_name(
   OM_uint32                     *minor_status,
-  gss_name_t                    name,
+  gss_const_name_t              name,
   int                           *name_is_MN,
   gss_OID                       *MN_mech,
   gss_buffer_set_t              *attrs
@@ -402,7 +448,8 @@ OM_uint32 gss_inquire_name(
           OF OCTET STRING. This type is used to represent a set of attributes
           and is a NULL-terminated array of gss_buffer_t. The gss_buffer_set_t
           type and associated API is defined in <xref
-          target="GFD.024">GFD.024</xref>.</t>
+          target="GFD.024">GFD.024</xref>. The "attrs" buffer set is
+          de-allocated by the caller using gss_release_buffer_set().</t>
         </section>
       </section>
 
@@ -425,11 +472,10 @@ OM_uint32 gss_inquire_name(
             values for the name.</t>
 
             <t>values SET OF OCTET STRING -- the caller is responsible for
-            de-allocating memory using GSS_Release_buffer_set defined in <xref
-            target="GFD.024">GFD.024</xref>.</t>
+            de-allocating memory using GSS_Release_buffer_set.</t>
 
-            <t>display_values SET OF STRING -- the caller is responsible for
-            de-allocating memory using GSS_Release_buffer</t>
+            <t>display_values SET OF OCTET STRING -- the caller is responsible
+            for de-allocating memory using GSS_Release_buffer_set</t>
           </list></t>
 
         <t>Return major_status codes: <list style="symbols">
@@ -476,12 +522,15 @@ OM_uint32 gss_inquire_name(
           MUST NOT change between multiple calls to iterate over values for an
           attribute.</t>
 
+          <t>The output buffers "value" and "display_value" are de-allocated
+          by the caller using gss_release_buffer().</t>
+
           <figure>
             <artwork><![CDATA[
 OM_uint32 gss_get_name_attribute(
   OM_uint32                     *minor_status,
-  gss_name_t                    name,
-  gss_buffer_t                  attr,
+  gss_const_name_t              name,
+  gss_const_buffer_t            attr,
   int                           *authenticated,
   int                           *complete,
   gss_buffer_t                  value,
@@ -514,11 +563,36 @@ OM_uint32 gss_get_name_attribute(
         <t>Return major_status codes: <list style="symbols">
             <t>GSS_S_COMPLETE indicates no error.</t>
 
-            <t>GSS_S_UNAVAILABLE indicates that the given attribute OID is not
-            known or could not be set.</t>
+            <t>GSS_S_UNAVAILABLE indicates that the given attribute NAME is
+            not known or could not be set.</t>
 
             <t>GSS_S_FAILURE indicates a general error.</t>
-          </list></t>
+          </list>When the given NAME object is an MN this function MUST fail
+        (with GSS_S_FAILURE) if the mechanism for which the name is an MN does
+        not recognize the attribute name or the namespace it belongs to. This
+        is because name attributes generally have some semantics that
+        mechanisms must understand.</t>
+
+        <t>On the other hand, when the given name is not an MN this function
+        MAY succeed even if none of the available mechanisms understand the
+        given attribute, in which subsequent credential acquisition attempts
+        (via GSS_Acquire_cred() or GSS_Add_cred()) with the resulting name
+        MUST fail for mechanisms that do not understand any one or more name
+        attributes set with this function. Applications may wish to use a
+        non-MN, then acquire a credential with that name as the desired name.
+        The acquired credentials will have elements only for the mechanisms
+        that can carry the name attributes set on the name.</t>
+
+        <t>Note that this means that all name attributes are locally critical:
+        the mechanism(s) must understand them. The reason for this is that
+        name attributes must necessarily have some meaning that the mechanism
+        must understand, even in the case of application-specific attributes
+        (in which case the mechanism must know to transport the attribute to
+        any peer). However, there is no provision to ensure that peers
+        understand any given name attribute. Individual name attributes may be
+        critical with respect to peers, and the specification of the attribute
+        will have to indicate which of the mechanism's protocol or the
+        application is expected to enforce criticality.</t>
 
         <t>The complete flag denotes that (if TRUE) the set of values
         represents a complete set of values for this name. The peer being an
@@ -545,10 +619,10 @@ OM_uint32 gss_get_name_attribute(
             <artwork><![CDATA[
 OM_uint32 gss_set_name_attribute(
   OM_uint32                     *minor_status,
-  gss_name_t                    name,
+  gss_const_name_t              name,
   int                           complete,
-  gss_buffer_t                  attr,
-  gss_buffer_t                  value
+  gss_const_buffer_t            attr,
+  gss_const_buffer_t            value
 );
 				    ]]></artwork>
           </figure>
@@ -571,8 +645,8 @@ OM_uint32 gss_set_name_attribute(
         <t>Return major_status codes: <list style="symbols">
             <t>GSS_S_COMPLETE indicates no error.</t>
 
-            <t>GSS_S_UNAVAILABLE indicates that the given attribute OID is not
-            known.</t>
+            <t>GSS_S_UNAVAILABLE indicates that the given attribute NAME is
+            not known.</t>
 
             <t>GSS_S_UNAUTHORIZED indicates that a forbidden delete operation
             was attempted eg deleting a negative attribute.</t>
@@ -588,8 +662,8 @@ OM_uint32 gss_set_name_attribute(
             <artwork><![CDATA[
 OM_uint32 gss_delete_name_attribute(
   OM_uint32                     *minor_status,
-  gss_name_t                    name,
-  gss_buffer_t                  attr
+  gss_const_name_t              name,
+  gss_const_buffer_t            attr
 );
 				    ]]></artwork>
           </figure>
@@ -618,20 +692,24 @@ OM_uint32 gss_delete_name_attribute(
 
         <t>This function outputs a token which can be imported with
         GSS_Import_name(), using GSS_C_NT_COMPOSITE_EXPORT as the name type
-        and which preserves any name attribute information associated with the
-        input name (which GSS_Export_name() may well not). The token format is
-        no specified here as this facility is intended for inter-process
-        communication only; however, all such tokens MUST start with a
-        two-octet token ID, hex 04 02, in network byte order.</t>
+        and which preserves any name attribute information (including the
+        authenticated/complete flags) associated with the input name (which
+        GSS_Export_name() may well not). The token format is not specified
+        here as this facility is intended for inter-process communication
+        only; however, all such tokens MUST start with a two-octet token ID,
+        hex 04 02, in network byte order.</t>
 
         <t>The OID for GSS_C_NT_COMPOSITE_EXPORT is &lt;TBD&gt;.</t>
 
         <section title="C-Bindings">
+          <t>The "exp_composite_name" buffer is de-allocated by the caller
+          with gss_release_buffer.</t>
+
           <figure>
             <artwork><![CDATA[
 OM_uint32 gss_export_name_composite(
   OM_uint32                     *minor_status,
-  gss_name_t                    name,
+  gss_const_name_t              name,
   gss_buffer_t                  exp_composite_name
 );
 				    ]]></artwork>
@@ -641,6 +719,8 @@ OM_uint32 gss_export_name_composite(
     </section>
 
     <section title="IANA Considerations">
+      <t>This specification has no actions for IANA.</t>
+
       <t>This document creates a namespace of GSS-API name attributes.
       Attributes are named by URIs, so no single authority is technically
       needed for allocation. However future deployment experience may indicate
@@ -677,27 +757,27 @@ OM_uint32 gss_export_name_composite(
       underlying mechanism.</t>
 
       <t>When the underlying security mechanism does not provide a permanent
-      unique identity (eg anonymous kerberos) the GSS-API naming extensions
-      may be used to provide a replacement permanent unique identity attribute
-      which in this case may be unique for each peer party. This is analogous
-      to the SAML permanentIdentifier attribute and has comparable security
-      and privacy properties and implications.</t>
+      unique identity (e.g., anonymous kerberos), GSS-API naming extensions
+      may be used to provide a permanent unique identity attribute. This may
+      be a globally unique identifier, a value unique within the namespace of
+      the attribute issuer, or a "directed" identifier that is unique per peer
+      acceptor identity. SAML, to use one example technology, offers a number
+      of built-in constructs for this purpose, such as a &lt;NameID&gt; with a
+      Format of "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent". SAML
+      deployments also typically make use of domain-specific attribute types
+      that can serve as identifiers.</t>
     </section>
   </middle>
 
   <back>
     <references title="Normative References">
-      <?rfc include='reference.RFC.2025.xml'?>
-
       <?rfc include='reference.RFC.2119.xml'?>
 
       <?rfc include='reference.RFC.2743.xml'?>
 
       <?rfc include='reference.RFC.2744.xml'?>
 
-      <?rfc include='reference.RFC.5280.xml'?>
-
-      <?rfc include='reference.RFC.4120.xml'?>
+      <?rfc include='reference.RFC.5587.xml'?>
 
       <reference anchor="GFD.024">
         <front>
@@ -797,8 +877,6 @@ OM_uint32 gss_export_name_composite(
 
     <references title="Informative References">
       <?rfc include='reference.RFC.4768.xml'?>
-
-      <?rfc include='reference.RFC.3061.xml'?>
 
       <?rfc include="reference.OASIS.saml-core-2.0-os"?>
     </references>
