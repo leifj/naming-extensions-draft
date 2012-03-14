@@ -10,28 +10,16 @@
 <?rfc sortrefs="yes"?>
 <?rfc iprnotified="no" ?>
 <?rfc strict="yes" ?>
-<rfc category="std" docName="draft-ietf-kitten-gssapi-naming-exts-13"
+<rfc category="std" docName="draft-ietf-kitten-gssapi-naming-exts-14"
      ipr="pre5378Trust200902">
   <front>
     <title abbrev="GSS-API Naming Extensions">GSS-API Naming
     Extensions</title>
 
     <author fullname="Nicolas Williams" initials="N." surname="Williams">
-      <organization abbrev="Sun">Sun Microsystems</organization>
+      <organization>Cryptonector, LLC</organization>
 
       <address>
-        <postal>
-          <street>5300 Riata Trace Ct</street>
-
-          <city>Austin</city>
-
-          <region>TX</region>
-
-          <code>78727</code>
-
-          <country>US</country>
-        </postal>
-
         <email>nico@cryptonector.com</email>
       </address>
     </author>
@@ -100,7 +88,7 @@
       </address>
     </author>
 
-    <date day="17" month="December" year="2011" />
+    <date day="11" month="March" year="2012" />
 
     <area>Security</area>
 
