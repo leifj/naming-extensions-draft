@@ -15,10 +15,13 @@
     <!ENTITY rfc2119 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml'>
     <!ENTITY rfc2743 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2743.xml'>
     <!ENTITY rfc2744 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2744.xml'>
-    <!ENTITY rfc5587 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5587.xml'>
+    <!ENTITY rfc3629 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3629.xml'>
+    <!ENTITY rfc4556 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.4556.xml'>
     <!ENTITY rfc4768 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.4768.xml'>
-    <!ENTITY saml-core PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml2/reference.OASIS.saml-core-2.0-os.xml'>
+    <!ENTITY rfc5587 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5587.xml'>
+    <!ENTITY ascii PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml2/_reference.ANSI.X3-4.1986.xml'>
     <!ENTITY gssapi-naming-exts PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-kitten-gssapi-naming-exts'>
+    <!ENTITY saml-core PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml2/reference.OASIS.saml-core-2.0-os.xml'>
 ]>
 
 
@@ -139,7 +142,7 @@
       applications through these interfaces.</t>
 
       <t>The model is that GSS names have attributes. The attributes of a name
-      may be authenticated (eg an X509 attribute certificate or signed SAML
+      may be authenticated (e.g., an X509 attribute certificate or signed SAML
       attribute assertion), or may have been set on a GSS name for the purpose
       of locally "asserting" the attribute during credential acquisition or
       security context exchange. Name attributes' values are network
@@ -162,7 +165,7 @@
     </section>
 
     <section title="Name Attribute Authenticity">
-      <t>An attribute is 'authenticated' iff there is a secure association
+      <t>An attribute is 'authenticated' IFF there is a secure association
       between the attribute (and its values) and the trusted source of the
       peer credential. Examples of authenticated attributes are (any part of)
       the signed portion of an X.509 certificate or AD-KDCIssued
@@ -176,7 +179,7 @@
       interpretations SHOULD be the result of applying local policy to the
       attribute.</t>
 
-      <t>An un-authentciated attribute is called <spanx style="emph">asserted</spanx>
+      <t>An un-authenticated attribute is called <spanx style="emph">asserted</spanx>
       in what follows.This is not to be confused with other uses of the word
       asserted or assertion eg "SAML attribute assertion", the attributes of
       which may be authenticated in the sense of this document for instance if
@@ -216,7 +219,8 @@
       federation.</t>
 
       <t>Another aspect related to trust is the role of the credential issuer
-      in providing the attribute. Consider Kerberos PKINIT (RFC 4556). In this
+          in providing the attribute. Consider Kerberos PKINIT <xref
+              target='RFC4556'/>. In this
       protocol, a public key and associated certificate are used to
       authenticate to a Kerberos KDC. Consider how attributes related to a
       pkinit certificate should be made available in GSS-API authentications
@@ -226,7 +230,7 @@
       just as if the KDC itself had made these statements. In other
       deployments, the KDC may have authorized a hash of the certificate
       without evaluating the content of the certificate or generally trusting
-      the issuing certificate authority. In this case, if the certificate were
+      the issuing certification authority. In this case, if the certificate were
       included in the issued ticket, the KDC would only be making the
       statement that the certificate was used in the authentication. This
       statement would be authenticated, but would not imply that the KDC
@@ -234,7 +238,7 @@
       initiator.</t>
 
       <t>Another aspect of context is encoding of the attribute information.
-      An attribute containing an ASCII or UTF-8 version of an e-mail address
+          An attribute containing an ASCII <xref target='ANSI.X3-4.1986'/> or UTF-8 <xref target='RFC3629'/> version of an e-mail address
       could not be interpreted the same as a ASN.1 Distinguished Encoding
       Rules e-mail address in a certificate.</t>
 
@@ -253,7 +257,7 @@
       <t>Local implementations or platforms are likely to have sufficient
       policy and information to know when contexts can be treated as the same.
       For example the GSS-API implementation may know that a particular
-      certificate authority can be trusted in the context of a pkinit
+      certification authority can be trusted in the context of a pkinit
       authentication. The local implementation may have sufficient policy to
       know that a particular credential issuer is trusted to make a given
       statement. In order to take advantage of this local knowledge within the
@@ -463,10 +467,10 @@ OM_uint32 gss_inquire_name(
 
             <t>minor_status INTEGER,</t>
 
-            <t>authenticated BOOLEAN, -- TRUE iff authenticated by the trusted
+            <t>authenticated BOOLEAN, -- TRUE IFF authenticated by the trusted
             peer credential source.</t>
 
-            <t>complete BOOLEAN -- TRUE iff this represents a complete set of
+            <t>complete BOOLEAN -- TRUE IFF this represents a complete set of
             values for the name.</t>
 
             <t>values SET OF OCTET STRING -- the caller is responsible for
@@ -544,7 +548,7 @@ OM_uint32 gss_get_name_attribute(
         <t>Inputs: <vspace blankLines="1" /> <list style="symbols">
             <t>name INTERNAL NAME,</t>
 
-            <t>complete BOOLEAN, -- TRUE iff this represents a complete set of
+            <t>complete BOOLEAN, -- TRUE IFF this represents a complete set of
             values for the name.</t>
 
             <t>attr OCTET STRING,</t>
@@ -872,8 +876,11 @@ OM_uint32 gss_export_name_composite(
 
     <references title="Informative References">
       &rfc4768;
-
+      &rfc4556;
       &saml-core;
+
+      &rfc3629;
+      &ascii;
     </references>
   </back>
 </rfc>
