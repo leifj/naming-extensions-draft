@@ -171,7 +171,7 @@
       peer credential. Examples of authenticated attributes are (any part of)
       the signed portion of an X.509 certificate or AD-KDCIssued
       authorization-data elements in Kerberos V Tickets provided of course
-      that the authenticity of the respective security associations (eg
+      that the authenticity of the respective security associations (e.g.,
       signatures) have been verified.</t>
 
       <t>Note that the fact that an attribute is authenticated does not imply
@@ -182,7 +182,7 @@
 
       <t>An un-authenticated attribute is called <spanx style="emph">asserted</spanx>
       in what follows. This is not to be confused with other uses of the word
-      asserted or assertion eg "SAML attribute assertion", the attributes of
+      asserted or assertion such as "SAML attribute assertion", the attributes of
       which may be authenticated in the sense of this document for instance if
       the SAML attribute assertion was signed by a key trusted by the
       peer.</t>
@@ -282,7 +282,7 @@
     </section>
 
     <section title="Representation of Attribute Names">
-      <t>Different underlying mechanisms (eg SAML or X.509 certificates)
+      <t>Different underlying mechanisms (e.g., SAML or X.509 certificates)
       provide different representations for the names of their attribute. In
       X.509 certificates, most objects are named by object identifiers (OIDs).
       The type of object (certificate extension, name constraint,
@@ -652,7 +652,7 @@ OM_uint32 gss_set_name_attribute(
             not known.</t>
 
             <t>GSS_S_UNAUTHORIZED indicates that a forbidden delete operation
-            was attempted eg deleting a negative attribute.</t>
+            was attempted, such as deleting a negative attribute.</t>
 
             <t>GSS_S_FAILURE indicates a general error.</t>
           </list></t>
@@ -743,7 +743,7 @@ OM_uint32 gss_export_name_composite(
       security of the attributes. This document classifies attributes as
       asserted or authenticated. Asserted (non-authenticated) attributes MUST
       NOT be used if the attribute has security implications for the
-      application (eg authorization decisions) since asserted attributes may
+      application (e.g., authorization decisions) since asserted attributes may
       easily be controlled by the peer directly.</t>
 
       <t>It is important to understand the meaning of 'authenticated' in this
