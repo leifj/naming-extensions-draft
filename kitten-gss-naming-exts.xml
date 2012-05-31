@@ -26,7 +26,7 @@
 ]>
 
 
-<rfc category="std" docName="draft-ietf-kitten-gssapi-naming-exts-14"
+<rfc category="std" docName="draft-ietf-kitten-gssapi-naming-exts-15"
      ipr="pre5378Trust200902">
   <front>
     <title abbrev="GSS-API Naming Extensions">GSS-API Naming
@@ -104,7 +104,7 @@
       </address>
     </author>
 
-    <date day="27" month="March" year="2012" />
+    <date day="31" month="May" year="2012" />
 
     <area>Security</area>
 
