@@ -750,7 +750,7 @@ OM_uint32 gss_export_name_composite(
       setting. Authenticated does not imply that any semantic of the attribute
       is claimed to be true. The only implication is that a trusted third
       party has asserted the attribute as opposed to the attribute being
-      asserte by the peer itself. Any additional semantics is always the
+      asserted by the peer itself. Any additional semantics are always the
       result of applying policy. For instance in a given deployment the mail
       attribute of the subject may be authenticated and sourced from an email
       system where 'authoritive' values are kept. In another situation users
