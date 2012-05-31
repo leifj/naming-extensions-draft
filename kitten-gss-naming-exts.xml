@@ -180,7 +180,7 @@
       attribute.</t>
 
       <t>An un-authenticated attribute is called <spanx style="emph">asserted</spanx>
-      in what follows.This is not to be confused with other uses of the word
+      in what follows. This is not to be confused with other uses of the word
       asserted or assertion eg "SAML attribute assertion", the attributes of
       which may be authenticated in the sense of this document for instance if
       the SAML attribute assertion was signed by a key trusted by the
@@ -516,7 +516,7 @@ OM_uint32 gss_inquire_name(
           calls and to indicate when all values have been obtained.</t>
 
           <t>The 'more' input/output parameter should point to an integer
-          variable whose value, on first call to gss_name_attribute_get() MUST
+          variable whose value, on first call to gss_get_name_attribute() MUST
           be -1, and whose value upon function call return will be non-zero to
           indicate that additional values remain, or zero to indicate that no
           values remain. The caller should not modify this parameter after the
@@ -752,7 +752,7 @@ OM_uint32 gss_export_name_composite(
       asserte by the peer itself. Any additional semantics is always the
       result of applying policy. For instance in a given deployment the mail
       attribute of the subject may be authenticated and sourced from an email
-      system where 'authoritive' values are kept. In another situations users
+      system where 'authoritive' values are kept. In another situation users
       may be allowed to modify their mail addresses freely. In both cases the
       'mail' attribute may be authenticated by virtue of being included in
       signed SAML attribute assertions or by other means authenticated by the
