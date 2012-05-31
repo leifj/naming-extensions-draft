@@ -22,6 +22,7 @@
     <!ENTITY ascii PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml2/_reference.ANSI.X3-4.1986.xml'>
     <!ENTITY gssapi-naming-exts PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-kitten-gssapi-naming-exts'>
     <!ENTITY saml-core PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml2/reference.OASIS.saml-core-2.0-os.xml'>
+    <!ENTITY saml-bindings PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml2/reference.OASIS.saml-bindings-2.0-os.xml'>
 ]>
 
 
@@ -129,7 +130,7 @@
 
     <section title="Introduction">
       <t>As described in <xref target="RFC4768"></xref> the GSS-API's naming
-      architecture suffers from certain limitations. This document proposes
+      architecture suffers from certain limitations. This document defines
       concrete GSS-API extensions.</t>
 
       <t>A number of extensions to the GSS-API <xref target="RFC2743"></xref>
@@ -165,7 +166,7 @@
     </section>
 
     <section title="Name Attribute Authenticity">
-      <t>An attribute is 'authenticated' IFF there is a secure association
+      <t>An attribute is 'authenticated' if and only if there is a secure association
       between the attribute (and its values) and the trusted source of the
       peer credential. Examples of authenticated attributes are (any part of)
       the signed portion of an X.509 certificate or AD-KDCIssued
@@ -467,10 +468,10 @@ OM_uint32 gss_inquire_name(
 
             <t>minor_status INTEGER,</t>
 
-            <t>authenticated BOOLEAN, -- TRUE IFF authenticated by the trusted
+            <t>authenticated BOOLEAN, -- TRUE if and only if authenticated by the trusted
             peer credential source.</t>
 
-            <t>complete BOOLEAN -- TRUE IFF this represents a complete set of
+            <t>complete BOOLEAN -- TRUE if and only if this represents a complete set of
             values for the name.</t>
 
             <t>values SET OF OCTET STRING -- the caller is responsible for
@@ -548,7 +549,7 @@ OM_uint32 gss_get_name_attribute(
         <t>Inputs: <vspace blankLines="1" /> <list style="symbols">
             <t>name INTERNAL NAME,</t>
 
-            <t>complete BOOLEAN, -- TRUE IFF this represents a complete set of
+            <t>complete BOOLEAN, -- TRUE if and only if this represents a complete set of
             values for the name.</t>
 
             <t>attr OCTET STRING,</t>
@@ -878,9 +879,10 @@ OM_uint32 gss_export_name_composite(
       &rfc4768;
       &rfc4556;
       &saml-core;
+      &saml-bindings;
 
-      &rfc3629;
       &ascii;
+      &rfc3629;
     </references>
   </back>
 </rfc>
