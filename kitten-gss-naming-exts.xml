@@ -15,14 +15,18 @@
     <!ENTITY rfc2119 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml'>
     <!ENTITY rfc2743 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2743.xml'>
     <!ENTITY rfc2744 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2744.xml'>
-    <!ENTITY rfc5587 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5587.xml'>
+    <!ENTITY rfc3629 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3629.xml'>
+    <!ENTITY rfc4556 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.4556.xml'>
     <!ENTITY rfc4768 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.4768.xml'>
-    <!ENTITY saml-core PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml2/reference.OASIS.saml-core-2.0-os.xml'>
+    <!ENTITY rfc5587 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5587.xml'>
+    <!ENTITY ascii PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml2/_reference.ANSI.X3-4.1986.xml'>
     <!ENTITY gssapi-naming-exts PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-kitten-gssapi-naming-exts'>
+    <!ENTITY saml-core PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml2/reference.OASIS.saml-core-2.0-os.xml'>
+    <!ENTITY saml-bindings PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml2/reference.OASIS.saml-bindings-2.0-os.xml'>
 ]>
 
 
-<rfc category="std" docName="draft-ietf-kitten-gssapi-naming-exts-14"
+<rfc category="std" docName="draft-ietf-kitten-gssapi-naming-exts-15"
      ipr="pre5378Trust200902">
   <front>
     <title abbrev="GSS-API Naming Extensions">GSS-API Naming
@@ -100,7 +104,7 @@
       </address>
     </author>
 
-    <date day="27" month="March" year="2012" />
+    <date day="31" month="May" year="2012" />
 
     <area>Security</area>
 
@@ -126,7 +130,7 @@
 
     <section title="Introduction">
       <t>As described in <xref target="RFC4768"></xref> the GSS-API's naming
-      architecture suffers from certain limitations. This document proposes
+      architecture suffers from certain limitations. This document defines
       concrete GSS-API extensions.</t>
 
       <t>A number of extensions to the GSS-API <xref target="RFC2743"></xref>
@@ -139,7 +143,7 @@
       applications through these interfaces.</t>
 
       <t>The model is that GSS names have attributes. The attributes of a name
-      may be authenticated (eg an X509 attribute certificate or signed SAML
+      may be authenticated (e.g., an X509 attribute certificate or signed SAML
       attribute assertion), or may have been set on a GSS name for the purpose
       of locally "asserting" the attribute during credential acquisition or
       security context exchange. Name attributes' values are network
@@ -162,12 +166,12 @@
     </section>
 
     <section title="Name Attribute Authenticity">
-      <t>An attribute is 'authenticated' iff there is a secure association
+      <t>An attribute is 'authenticated' if and only if there is a secure association
       between the attribute (and its values) and the trusted source of the
       peer credential. Examples of authenticated attributes are (any part of)
       the signed portion of an X.509 certificate or AD-KDCIssued
       authorization-data elements in Kerberos V Tickets provided of course
-      that the authenticity of the respective security associations (eg
+      that the authenticity of the respective security associations (e.g.,
       signatures) have been verified.</t>
 
       <t>Note that the fact that an attribute is authenticated does not imply
@@ -176,9 +180,9 @@
       interpretations SHOULD be the result of applying local policy to the
       attribute.</t>
 
-      <t>An un-authentciated attribute is called <spanx style="emph">asserted</spanx>
-      in what follows.This is not to be confused with other uses of the word
-      asserted or assertion eg "SAML attribute assertion", the attributes of
+      <t>An un-authenticated attribute is called <spanx style="emph">asserted</spanx>
+      in what follows. This is not to be confused with other uses of the word
+      asserted or assertion such as "SAML attribute assertion", the attributes of
       which may be authenticated in the sense of this document for instance if
       the SAML attribute assertion was signed by a key trusted by the
       peer.</t>
@@ -216,7 +220,8 @@
       federation.</t>
 
       <t>Another aspect related to trust is the role of the credential issuer
-      in providing the attribute. Consider Kerberos PKINIT (RFC 4556). In this
+          in providing the attribute. Consider Kerberos PKINIT <xref
+              target='RFC4556'/>. In this
       protocol, a public key and associated certificate are used to
       authenticate to a Kerberos KDC. Consider how attributes related to a
       pkinit certificate should be made available in GSS-API authentications
@@ -226,7 +231,7 @@
       just as if the KDC itself had made these statements. In other
       deployments, the KDC may have authorized a hash of the certificate
       without evaluating the content of the certificate or generally trusting
-      the issuing certificate authority. In this case, if the certificate were
+      the issuing certification authority. In this case, if the certificate were
       included in the issued ticket, the KDC would only be making the
       statement that the certificate was used in the authentication. This
       statement would be authenticated, but would not imply that the KDC
@@ -234,7 +239,7 @@
       initiator.</t>
 
       <t>Another aspect of context is encoding of the attribute information.
-      An attribute containing an ASCII or UTF-8 version of an e-mail address
+          An attribute containing an ASCII <xref target='ANSI.X3-4.1986'/> or UTF-8 <xref target='RFC3629'/> version of an e-mail address
       could not be interpreted the same as a ASN.1 Distinguished Encoding
       Rules e-mail address in a certificate.</t>
 
@@ -253,7 +258,7 @@
       <t>Local implementations or platforms are likely to have sufficient
       policy and information to know when contexts can be treated as the same.
       For example the GSS-API implementation may know that a particular
-      certificate authority can be trusted in the context of a pkinit
+      certification authority can be trusted in the context of a pkinit
       authentication. The local implementation may have sufficient policy to
       know that a particular credential issuer is trusted to make a given
       statement. In order to take advantage of this local knowledge within the
@@ -277,7 +282,7 @@
     </section>
 
     <section title="Representation of Attribute Names">
-      <t>Different underlying mechanisms (eg SAML or X.509 certificates)
+      <t>Different underlying mechanisms (e.g., SAML or X.509 certificates)
       provide different representations for the names of their attribute. In
       X.509 certificates, most objects are named by object identifiers (OIDs).
       The type of object (certificate extension, name constraint,
@@ -463,10 +468,10 @@ OM_uint32 gss_inquire_name(
 
             <t>minor_status INTEGER,</t>
 
-            <t>authenticated BOOLEAN, -- TRUE iff authenticated by the trusted
+            <t>authenticated BOOLEAN, -- TRUE if and only if authenticated by the trusted
             peer credential source.</t>
 
-            <t>complete BOOLEAN -- TRUE iff this represents a complete set of
+            <t>complete BOOLEAN -- TRUE if and only if this represents a complete set of
             values for the name.</t>
 
             <t>values SET OF OCTET STRING -- the caller is responsible for
@@ -512,7 +517,7 @@ OM_uint32 gss_inquire_name(
           calls and to indicate when all values have been obtained.</t>
 
           <t>The 'more' input/output parameter should point to an integer
-          variable whose value, on first call to gss_name_attribute_get() MUST
+          variable whose value, on first call to gss_get_name_attribute() MUST
           be -1, and whose value upon function call return will be non-zero to
           indicate that additional values remain, or zero to indicate that no
           values remain. The caller should not modify this parameter after the
@@ -544,7 +549,7 @@ OM_uint32 gss_get_name_attribute(
         <t>Inputs: <vspace blankLines="1" /> <list style="symbols">
             <t>name INTERNAL NAME,</t>
 
-            <t>complete BOOLEAN, -- TRUE iff this represents a complete set of
+            <t>complete BOOLEAN, -- TRUE if and only if this represents a complete set of
             values for the name.</t>
 
             <t>attr OCTET STRING,</t>
@@ -647,7 +652,7 @@ OM_uint32 gss_set_name_attribute(
             not known.</t>
 
             <t>GSS_S_UNAUTHORIZED indicates that a forbidden delete operation
-            was attempted eg deleting a negative attribute.</t>
+            was attempted, such as deleting a negative attribute.</t>
 
             <t>GSS_S_FAILURE indicates a general error.</t>
           </list></t>
@@ -738,17 +743,17 @@ OM_uint32 gss_export_name_composite(
       security of the attributes. This document classifies attributes as
       asserted or authenticated. Asserted (non-authenticated) attributes MUST
       NOT be used if the attribute has security implications for the
-      application (eg authorization decisions) since asserted attributes may
+      application (e.g., authorization decisions) since asserted attributes may
       easily be controlled by the peer directly.</t>
 
       <t>It is important to understand the meaning of 'authenticated' in this
       setting. Authenticated does not imply that any semantic of the attribute
       is claimed to be true. The only implication is that a trusted third
       party has asserted the attribute as opposed to the attribute being
-      asserte by the peer itself. Any additional semantics is always the
+      asserted by the peer itself. Any additional semantics are always the
       result of applying policy. For instance in a given deployment the mail
       attribute of the subject may be authenticated and sourced from an email
-      system where 'authoritive' values are kept. In another situations users
+      system where 'authoritive' values are kept. In another situation users
       may be allowed to modify their mail addresses freely. In both cases the
       'mail' attribute may be authenticated by virtue of being included in
       signed SAML attribute assertions or by other means authenticated by the
@@ -872,8 +877,12 @@ OM_uint32 gss_export_name_composite(
 
     <references title="Informative References">
       &rfc4768;
-
+      &rfc4556;
       &saml-core;
+      &saml-bindings;
+
+      &ascii;
+      &rfc3629;
     </references>
   </back>
 </rfc>
